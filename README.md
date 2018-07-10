@@ -118,6 +118,25 @@ Different categories in recording training data are: sample, regular lap, counte
 
 Data augmentation was used in the form of flipping over the vertical axis (as described earlier)
 
+Below are examples of the images used in training.
+
+Example of original image:
+
+<img src="./ex_img/og_img.png"/>
+
+Example of original image after cropping:
+
+<img src="./ex_img/crop_img.png"/>
+
+Example of flipped image:
+
+<img src="./ex_img/flip_img.png"/>
+
+Example of flipped image after cropping:
+
+<img src="./ex_img/flip_crop_img.png"/>
+
+
 I used all the left and right images provided by training with a correction factor of 0.2.
 
 I used a 80/20 split for the training and validation set. For each epoch, all the data is shuffled (line 85).
