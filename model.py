@@ -109,6 +109,7 @@ def generator(samples):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs")
+    parser.add_argument("--test", action="store_true")
     args = parser.parse_args()
 
     # set batch size
@@ -122,15 +123,28 @@ if __name__ == "__main__":
     data_samples = parse_data()
 
     # split samples to create validation set
-    train_samples, validation_samples = train_test_split(data_samples, test_size=0.2)
+    train_samples, validation_samples = train_test_split(data_samples, test_size=0.4)
+    validation_samples, test_samples = train_test_split(validation_samples, test_size=0.5)
 
-    # compile and train the model using the generator function
-    train_generator = generator(train_samples)
-    validation_generator = generator(validation_samples)
+    if not args.test:
+        # compile and train the model using the generator function
+        train_generator = generator(train_samples)
+        validation_generator = generator(validation_samples)
 
-    print("No. of examples: {}".format(len(data_samples)))
-    samples_per_epoch = len(train_samples)
-    samples_per_valid_epoch = len(validation_samples)
+        print("No. of examples: {}".format(len(data_samples)))
+        samples_per_epoch = len(train_samples)
+        samples_per_valid_epoch = len(validation_samples)
 
-    print("Training model...")
-    train_model(train_generator, validation_generator)
+        print("Training model...")
+        train_model(train_generator, validation_generator)
+    else:
+        test_generator = generator(test_samples)
+
+        print("No. of examples: {}".format(len(test_samples)))
+        print("Testing model...")
+
+        model = keras.models.load_model('model.h5')
+
+        test_loss = model.evaluate_generator(test_generator, len(test_samples) // batch_size)
+
+        print("Test loss: {}".format(test_loss))
